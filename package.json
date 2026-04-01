@@ -1,0 +1,16 @@
+{
+  "name": "playwrightassessment1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.59.0",
+    "@types/node": "^25.5.0",
+    "dotenv": "^17.3.1"
+  }
+}
