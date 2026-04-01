@@ -10,6 +10,8 @@ const password = process.env.PASSWORD
 test("Login to Application and place order", async function({page}){
     await page.goto('/')
     const loginPage = new LoginPage(page)
+    console.log(`Attempting login with user: ${process.env.USERNAME}`);
+    console.log(`Attempting login with password: ${process.env.PASSWORD}`);
     await loginPage.loginToApp(username,password)
     const homePage = new HomePage(page)
     await homePage.verifyAppLogoPostLogin()
