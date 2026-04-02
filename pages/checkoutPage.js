@@ -9,9 +9,9 @@ class CheckoutPage
         this.finishButton = '//button[@data-test="finish"]'
     }
 
-    async fillCheckoutDetails(fn,ln,zipcode){
-        await  this.page.locator(this.firstName).fill(fn)
-        await  this.page.locator(this.lastName).fill(ln)
+    async fillCheckoutDetails(firstname,lastname,zipcode){
+        await  this.page.locator(this.firstName).fill(firstname)
+        await  this.page.locator(this.lastName).fill(lastname)
         await this.page.locator(this.zipCode).fill(zipcode)
     }
     async  clickContinue(){
