@@ -8,26 +8,62 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ''
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_DATABASE: testdata_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
     - uses: actions/checkout@v4
+
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
+
     - name: Install dependencies
       run: npm ci
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+
+    # ✅ NEW - Seed MySQL with test data
+    - name: Seed MySQL test data
+      run: |
+        mysql -h 127.0.0.1 -P 3306 -u root --password="" testdata_db <<EOF
+        CREATE TABLE IF NOT EXISTS user_test_data (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          firstname VARCHAR(100) NOT NULL,
+          lastname VARCHAR(100) NOT NULL,
+          zipcode VARCHAR(20) NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        INSERT INTO user_test_data (firstname, lastname, zipcode)
+        VALUES ('Manorama', 'Sahoo', '112233');
+        EOF
+
     - name: Run Playwright tests
       run: npx playwright test
       env:
-        BASE_URL: ${{ secrets.BASE_URL }}             # ← reads from GitHub secrets
-        STANDARD_USER: ${{ secrets.STANDARD_USER }}   # ← reads from GitHub secrets
-        PASSWORD: ${{ secrets.PASSWORD }} 
-        DB_HOST: ${{secrets.DB_HOST}}
-        DB_PORT: ${{secrets.DB_PORT}}
-        DB_USER: ${{secrets.DB_USER}}
-        DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-        DB_NAME: ${{secrets.DB_NAME}}
+        BASE_URL: ${{ secrets.BASE_URL }}
+        STANDARD_USER: ${{ secrets.STANDARD_USER }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+        DB_HOST: 127.0.0.1       # ✅ hardcoded - MySQL service runs on runner itself
+        DB_PORT: 3306             # ✅ hardcoded
+        DB_USER: root             # ✅ hardcoded
+        DB_PASSWORD: ''           # ✅ blank - no password set
+        DB_NAME: testdata_db      # ✅ hardcoded
+
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
