@@ -3,10 +3,11 @@ const LoginPage = require('../pages/loginPage')
 const HomePage = require('../pages/homePage')
 const CartPage = require('../pages/cartPage')
 const CheckoutPage = require('../pages/checkoutPage')
-const data = JSON.parse(JSON.stringify(require('../testdata.json')))
+const getUserTestData = require('../utils/dbHelper')
+// const data = JSON.parse(JSON.stringify(require('../testdata.json')))
 const username = process.env.STANDARD_USER
 const password = process.env.PASSWORD
-let loginPage,homePage,cartPage,checkoutPage
+let loginPage,homePage,cartPage,checkoutPage,data
 
 test.describe('Saucedemo E2E scenarios', function () {
     test.beforeEach(async function ({ page }) {
@@ -15,6 +16,8 @@ test.describe('Saucedemo E2E scenarios', function () {
         homePage = new HomePage(page)
         cartPage = new CartPage(page)
         checkoutPage = new CheckoutPage(page)
+        data = await getUserTestData(1)
+        console.log("Test data loaded from DB : ", data)
     })
 
     test("login and place order successfully", async function ({ page }) {
@@ -28,6 +31,7 @@ test.describe('Saucedemo E2E scenarios', function () {
         await checkoutPage.clickContinue()
         await checkoutPage.clickFinish()
         await homePage.verifySuccessMessagePostOrder("Thank you for your order!")
+        console.log(`order placed for ${data.firstname} ${data.lastname} `)
         await homePage.logoutFromApp()
         await loginPage.verifyLoginPostLogout()
     })

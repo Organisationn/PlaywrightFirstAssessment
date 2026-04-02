@@ -23,6 +23,11 @@ jobs:
         BASE_URL: ${{ secrets.BASE_URL }}             # ← reads from GitHub secrets
         STANDARD_USER: ${{ secrets.STANDARD_USER }}   # ← reads from GitHub secrets
         PASSWORD: ${{ secrets.PASSWORD }} 
+        DB_HOST: ${{secrets.DB_HOST}}
+        DB_PORT: ${{secrets.DB_PORT}}
+        DB_USER: ${{secrets.DB_USER}}
+        DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+        DB_NAME: ${{secrets.DB_NAME}}
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
