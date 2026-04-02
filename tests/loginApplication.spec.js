@@ -1,39 +1,41 @@
 const{test,expect} = require('@playwright/test')
-import LoginPage from '../pages/loginPage'
-import HomePage from '../pages/homePage'
-import CartPage from '../pages/cartPage'
-import CheckoutPage from '../pages/checkoutPage'
+const LoginPage = require('../pages/loginPage')
+const HomePage = require('../pages/homePage')
+const CartPage = require('../pages/cartPage')
+const CheckoutPage = require('../pages/checkoutPage')
 const data = JSON.parse(JSON.stringify(require('../testdata.json')))
 const username = process.env.STANDARD_USER
 const password = process.env.PASSWORD
+let loginPage,homePage,cartPage,checkoutPage
 
-test("Login to Application and place order", async function({page}){
-    await page.goto('/')
-    const loginPage = new LoginPage(page)
-    console.log(`Attempting login with user: ${process.env.STANDARD_USER}`);
-    console.log(`used URL: ${process.env.BASE_URL}`);
-    await loginPage.loginToApp(username,password)
-    const homePage = new HomePage(page)
-    await homePage.verifyAppLogoPostLogin()
-    await page.waitForTimeout(3000)
-    await homePage.addItemToCart()
-    await page.waitForTimeout(3000)
-    await homePage.clickCartLink()
-    const cartPage  = new CartPage(page)
-    await cartPage.clickCheckoutButton()
-    const checkoutPage = new CheckoutPage(page)
-    await checkoutPage.fillCheckoutDetails(data.firstname,data.lastname,data.zipcode)
-    await checkoutPage.clickContinue()
-    await checkoutPage.clickFinish()
-    await homePage.verifySuccessMessagePostOrder()
-    await page.waitForTimeout(3000)
-    await homePage.logoutFromApp()
-    await loginPage.verifyLoginPostLogout()
-})
+test.describe('Saucedemo E2E scenarios', function () {
+    test.beforeEach(async function ({ page }) {
+        await page.goto('/')
+        loginPage = new LoginPage(page)
+        homePage = new HomePage(page)
+        cartPage = new CartPage(page)
+        checkoutPage = new CheckoutPage(page)
+    })
 
-test("verify login with empty Username", async function({page}){
-    await page.goto("/")
-    const loginPage = new LoginPage(page)
-    await loginPage.loginToApp('',password)
-    await loginPage.verifyErrorMessageForInvalidLogin()
+    test("login and place order successfully", async function ({ page }) {
+        await page.goto('/')
+        await loginPage.loginToApp(username, password)
+        await homePage.verifyAppLogoPostLogin()
+        await homePage.addItemToCart("sauce-labs-backpack")
+        await homePage.clickCartLink()
+        await cartPage.clickCheckoutButton()
+        await checkoutPage.fillCheckoutDetails(data.firstname, data.lastname, data.zipcode)
+        await checkoutPage.clickContinue()
+        await checkoutPage.clickFinish()
+        await homePage.verifySuccessMessagePostOrder("Thank you for your order!")
+        await homePage.logoutFromApp()
+        await loginPage.verifyLoginPostLogout()
+    })
+
+    test("verify error for empty username", async function ({ page }) {
+        await page.goto("/")
+        const loginPage = new LoginPage(page)
+        await loginPage.loginToApp('', password)
+        await loginPage.verifyErrorMessageForInvalidLogin("Epic sadface: Username is required")
+    })
 })

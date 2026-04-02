@@ -5,7 +5,7 @@ class CartPage {
     }
 
     async clickCheckoutButton(){
-        await this.page.click(this.checkoutButton)
+        await this.page.locator(this.checkoutButton).click()
     }
 }
 

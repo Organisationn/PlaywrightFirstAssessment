@@ -2,22 +2,22 @@ const {expect} = require('@playwright/test')
 class LoginPage{
     constructor(page){
         this.page = page
-        this.userName ='#user-name',
-        this.password = '#password',
-        this.loginButton = '#login-button',
+        this.userName ='#user-name'
+        this.password = '#password'
+        this.loginButton = '#login-button'
         this.errorMessage = 'h3[data-test="error"]'
     }
 
     async loginToApp(un,pwd){
-        await this.page.fill(this.userName, un)
-        await this.page.fill(this.password, pwd)
-        await this.page.click(this.loginButton)
+        await this.page.locator(this.userName).fill(un)
+        await this.page.locator(this.password).fill(pwd)
+        await this.page.locator(this.loginButton).click()
     }
     async verifyLoginPostLogout(){
         await expect(this.page.locator(this.loginButton)).toBeVisible()
     }
-    async verifyErrorMessageForInvalidLogin(){
-        await expect(this.page.locator(this.errorMessage)).toHaveText("Epic sadface: Username is required")
+    async verifyErrorMessageForInvalidLogin(errorMessage){
+        await expect(this.page.locator(this.errorMessage)).toHaveText(errorMessage)
     }
 
 }
