@@ -3,7 +3,7 @@ const LoginPage = require('../pages/loginPage')
 const HomePage = require('../pages/homePage')
 const CartPage = require('../pages/cartPage')
 const CheckoutPage = require('../pages/checkoutPage')
-const getUserTestData = require('../utils/dbHelper')
+const testdata = require('../testdata.json')
 const username = process.env.STANDARD_USER
 const password = process.env.PASSWORD
 let loginPage,homePage,cartPage,checkoutPage,data
@@ -11,15 +11,15 @@ let loginPage,homePage,cartPage,checkoutPage,data
 test.describe('Saucedemo E2E scenarios', function () {
     test.beforeEach(async function ({ page }) {
         await page.goto('/')
+        data = JSON.parse(JSON.stringify(testdata))
+        console.log("Test data loaded from json : ", data)
+    })
+
+    test("login and place order successfully", async function ({ page }) {
         loginPage = new LoginPage(page)
         homePage = new HomePage(page)
         cartPage = new CartPage(page)
         checkoutPage = new CheckoutPage(page)
-        data = await getUserTestData(1)
-        console.log("Test data loaded from DB : ", data)
-    })
-
-    test("login and place order successfully", async function ({ page }) {
         await loginPage.loginToApp(username, password)
         await homePage.verifyAppLogoPostLogin()
         await homePage.addItemToCart("sauce-labs-backpack")
@@ -35,7 +35,7 @@ test.describe('Saucedemo E2E scenarios', function () {
     })
 
     test("verify error for empty username", async function ({ page }) {
-        const loginPage = new LoginPage(page)
+        loginPage = new LoginPage(page)
         await loginPage.loginToApp('', password)
         await loginPage.verifyErrorMessageForInvalidLogin("Epic sadface: Username is required")
     })

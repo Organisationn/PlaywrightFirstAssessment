@@ -1,11 +1,11 @@
 class CartPage {
     constructor(page){
         this.page = page
-        this.checkoutButton = '//button[@data-test="checkout"]'
+        this.checkoutButton = this.page.getByRole('button',{name:'Checkout'})
     }
 
     async clickCheckoutButton(){
-        await this.page.locator(this.checkoutButton).click()
+        await this.checkoutButton.click()
     }
 }
 
