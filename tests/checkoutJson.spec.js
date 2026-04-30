@@ -8,14 +8,14 @@ const username = process.env.STANDARD_USER
 const password = process.env.PASSWORD
 let loginPage,homePage,cartPage,checkoutPage,data
 
-test.describe('Saucedemo E2E scenarios', function () {
-    test.beforeEach(async function ({ page }) {
+test.describe('Saucedemo E2E scenarios', () => {
+    test.beforeEach(async ({ page }) => {
         await page.goto('/')
         data = JSON.parse(JSON.stringify(testdata))
         console.log("Test data loaded from json : ", data)
     })
 
-    test("login and place order successfully", async function ({ page }) {
+    test("login and place order successfully", async ({ page }) => {
         loginPage = new LoginPage(page)
         homePage = new HomePage(page)
         cartPage = new CartPage(page)
@@ -34,7 +34,7 @@ test.describe('Saucedemo E2E scenarios', function () {
         await loginPage.verifyLoginPostLogout()
     })
 
-    test("verify error for empty username", async function ({ page }) {
+    test("verify error for empty username", async ({ page }) => {
         loginPage = new LoginPage(page)
         await loginPage.loginToApp('', password)
         await loginPage.verifyErrorMessageForInvalidLogin("Epic sadface: Username is required")
