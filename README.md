@@ -17,6 +17,7 @@ The framework is structured to simulate real-world automation needs and can be e
 
 ## 🏗️ Framework Architecture
 
+```bash
 PlaywrightFirstAssessment/
 │
 ├── pages/                 # Page Object Model (POM) classes
