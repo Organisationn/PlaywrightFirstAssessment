@@ -8,10 +8,11 @@ This project demonstrates a robust UI automation framework using:
 
 This framework demonstrates real-world automation practices including CI/CD integration, environment variable management, and database-driven testing.
 
- ✅ Page Object Model (POM) for maintainability  
- ✅ Data-driven testing using JSON and Database  
- ✅ Browser configuration is scalable and can be extended to support cross-browser execution (Chromium, Firefox, WebKit)  
- ✅ Clean and modular test design  
+ ✅ Page Object Model (POM) for maintainability
+ ✅ Data-driven testing using JSON and Database
+ ✅ Environment variable management using `.env` and `.env.example`
+ ✅ Browser configuration is scalable and can be extended to support cross-browser execution (Chromium, Firefox, WebKit)
+ ✅ Clean and modular test design
 
 The framework is structured to simulate real-world automation needs and can be easily extended for enterprise-level applications.
 
@@ -121,6 +122,7 @@ The framework uses Playwright's built-in HTML reporter for test execution result
 * Implemented data-driven testing using JSON and database
 * Designed scalable browser configuration with support for cross-browser execution
 * Executed automation suite using CI tools like GitHub Actions and Jenkins
+* Managed environment configuration using .env and secrets
 * Built a maintainable and extensible automation solution
 
 ## 🤝 Conclusion
